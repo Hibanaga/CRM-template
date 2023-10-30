@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"src/**/*.ts\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"src/tests/Initial/**/*.ts\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"",
+    "format": "prettier --write \"src/tests/test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -17,7 +17,14 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config src/tests/Initial/jest-e2e.json"
+    "test:e2e": "jest --config src/tests/test/jest-e2e.json",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:cache": "npm run typeorm -- -d cache:clear",
+    "migration:info": "npm run typeorm migration:show -- -d ./typeorm-cli.config.ts",
+    "migration:run": "npm run typeorm migration:run -- -d ./typeorm-cli.config.ts",
+    "migration:generate": "npm run typeorm -- -d ./typeorm-cli.config.ts migration:generate ./src/database/migrations/$npm_config_name",
+    "migration:create": "npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
+    "migration:revert": "npm run typeorm -- -d ./typeorm-cli.config.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
