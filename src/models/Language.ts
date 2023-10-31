@@ -2,12 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Market } from './Market';
 
 @Entity({ name: 'languages' })
 export class Language {
@@ -25,7 +22,4 @@ export class Language {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
-  @OneToOne(() => Market, (market) => market.id)
-  market: Market;
 }

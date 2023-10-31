@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate } from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormCliConfig from '../typeorm-cli.config';
+import { Language } from './models/Language';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import typeormCliConfig from '../typeorm-cli.config';
       inject: [ConfigService],
       useFactory: () => typeormCliConfig.options,
     }),
+    TypeOrmModule.forFeature([Language]),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class App {}
