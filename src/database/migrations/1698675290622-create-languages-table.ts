@@ -37,6 +37,16 @@ export class CreateLanguagesTable1698675290622 implements MigrationInterface {
             default: 'CURRENT_TIMESTAMP',
           },
         ],
+        indices: [
+          {
+            name: 'IDX_LANGUAGES_IDs',
+            columnNames: ['id'],
+          },
+          {
+            name: 'IDX_LANGUAGES_LANGUAGE_CODE',
+            columnNames: ['language_code'],
+          },
+        ],
       }),
     );
   }
