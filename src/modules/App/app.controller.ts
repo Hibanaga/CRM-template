@@ -1,6 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Language } from '../../models/Language';
+import { Seeder } from '../../types/Seeder';
 
 @Controller()
 export class AppController {
@@ -12,7 +12,7 @@ export class AppController {
   }
 
   @Post('/seed')
-  async seed(): Promise<Language[]> {
-    return this.appService.seed();
+  async seed(): Promise<Seeder> {
+    return await this.appService.seed();
   }
 }

@@ -10,15 +10,15 @@ export class CreateLanguagesTable1698675290622 implements MigrationInterface {
             name: 'id',
             type: 'uuid',
             isPrimary: true,
-            isGenerated: true,
             isNullable: false,
+            isUnique: true,
             generationStrategy: 'uuid',
-            default: 'gen_random_uuid()',
           },
           {
             name: 'language_code',
             type: 'varchar',
             isNullable: false,
+            isUnique: true,
           },
           {
             name: 'default',
