@@ -19,7 +19,6 @@ export default new DataSource({
   password: configService.get<string>('POSTGRES_PASSWORD'),
   database: configService.get<string>('POSTGRES_DB'),
   logging: configService.get<boolean>('POSTGRES_LOGGING'),
-  synchronize: configService.get<boolean>('POSTGRES_SYNCHRONIZE'),
   entities: [baseFolder() + '/src/models/**/*{.ts,.js}'],
   migrations: [baseFolder() + '/src/database/migrations/**/*{.ts,.js}'],
 });
