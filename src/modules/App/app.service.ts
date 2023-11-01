@@ -108,7 +108,7 @@ export class AppService {
     repository: Repository<T>,
     entityClass: EntityTarget<T>,
     elementsToExclude: Array<any>,
-  ) {
+  ): Promise<Array<any>> {
     try {
       return await Promise.all(
         elementsToExclude.map(async (language) => {
