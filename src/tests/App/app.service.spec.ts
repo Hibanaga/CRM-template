@@ -6,7 +6,7 @@ import { TypeORMPostgresqlTestingModule } from '../../config/tests';
 import { Language } from '../../models/Language';
 import { INestApplication } from '@nestjs/common';
 import { AppController } from '../../modules/App/app.controller';
-import { App } from '../../app';
+import { AppModule } from '../../app';
 import { Repository } from 'typeorm';
 
 describe('AppService', () => {
@@ -30,7 +30,7 @@ describe('AppService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        App,
+        AppModule,
         TypeORMPostgresqlTestingModule([Language]),
         TypeOrmModule.forFeature([Language]),
       ],
