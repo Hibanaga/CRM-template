@@ -15,7 +15,7 @@ export class AppService {
   ) {}
 
   async entry(): Promise<string> {
-    return `Application succesfully run on http://localhost:${this.configService.get<number>(
+    return `Application successfully run on http://localhost:${this.configService.get<number>(
       'APP_PORT',
     )}`;
   }
@@ -108,7 +108,7 @@ export class AppService {
     repository: Repository<T>,
     entityClass: EntityTarget<T>,
     elementsToExclude: Array<any>,
-  ) {
+  ): Promise<Array<any>> {
     try {
       return await Promise.all(
         elementsToExclude.map(async (language) => {
