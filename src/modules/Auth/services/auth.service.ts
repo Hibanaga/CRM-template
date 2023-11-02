@@ -10,6 +10,7 @@ import { User } from '../../../models/User';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import CryptoService from './crypto.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly cryptoService: CryptoService,
+    private jwtService: JwtService,
   ) {}
 
   async register(body: RegisterAuthDto): Promise<User> {
@@ -91,5 +93,29 @@ export class AuthService {
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
+  }
+
+  async validate(email: string, password: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (
+      user &&
+      (await this.cryptoService.matchPassword(password, user.password))
+    ) {
+      const { password, ...otherParams } = user;
+      return otherParams;
+    }
+
+    return null;
+  }
+
+  async refreshToken(user: User) {
+    const payload = {
+      email: user.email,
+    };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }
