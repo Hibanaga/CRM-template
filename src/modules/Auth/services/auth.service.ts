@@ -1,16 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RegisterAuthDto } from './dto/register-auth.dto';
-import { LoginAuthDto } from './dto/login-auth.dto';
-import { User } from '../../models/User';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
+import { RegisterAuthDto } from '../dto/register-auth.dto';
+import { LoginAuthDto } from '../dto/login-auth.dto';
+import { User } from '../../../models/User';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hashPassword } from '../../utils/password';
+import CryptoService from './crypto.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async register(body: RegisterAuthDto): Promise<User> {
@@ -23,7 +29,9 @@ export class AuthService {
         throw new HttpException('Email already exist', HttpStatus.BAD_REQUEST);
       }
 
-      const hashedPassword = await hashPassword(body.password);
+      const hashedPassword = await this.cryptoService.hashPassword(
+        body.password,
+      );
       const newUser = await this.userRepository
         .createQueryBuilder()
         .insert()
@@ -43,9 +51,26 @@ export class AuthService {
 
   async login(body: LoginAuthDto): Promise<User> {
     try {
-      return await this.userRepository.findOne({
+      const user = await this.userRepository.findOne({
         where: { email: body.email },
       });
+
+      if (!user) {
+        throw new NotAcceptableException(
+          'Cannot find user with this credentials',
+        );
+      }
+
+      const passwordValidation = await this.cryptoService.matchPassword(
+        body.password,
+        user.password,
+      );
+
+      if (user && passwordValidation) {
+        return user;
+      }
+
+      return null;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
