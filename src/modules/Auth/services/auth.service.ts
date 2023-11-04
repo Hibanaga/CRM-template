@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import CryptoService from './crypto.service';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly cryptoService: CryptoService,
+    private configService: ConfigService,
     private jwtService: JwtService,
   ) {}
 
@@ -51,30 +53,26 @@ export class AuthService {
     }
   }
 
-  async login(body: LoginAuthDto): Promise<User> {
+  async login(body: LoginAuthDto): Promise<any> {
     try {
-      const user = await this.userRepository.findOne({
-        where: { email: body.email },
-      });
+      const payload = {
+        email: body.email,
+        sub: {
+          username: body.username,
+        },
+      };
 
-      if (!user) {
-        throw new NotAcceptableException(
-          'Cannot find user with this credentials',
-        );
-      }
-
-      const passwordValidation = await this.cryptoService.matchPassword(
-        body.password,
-        user.password,
-      );
-
-      if (user && passwordValidation) {
-        return user;
-      }
-
-      return null;
+      return {
+        ...body,
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: this.jwtService.sign(payload, {
+          expiresIn: this.configService.get<string>(
+            'JWT_REFRESH_TOKEN_EXPIRATION',
+          ),
+        }),
+      };
     } catch (e) {
-      throw new HttpException(e.message, HttpStatus.NOT_FOUND);
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
 

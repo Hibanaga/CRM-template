@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Param,
@@ -24,24 +23,19 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @Post('/login')
+  @Post('login')
   login(@Body() body: LoginAuthDto) {
     return this.authService.login(body);
-  }
-
-  @Get(':id')
-  single(@Param('id') id: string) {
-    return this.authService.single(id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(id);
   }
 
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
   async refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.authService.remove(id);
   }
 }

@@ -1,12 +1,13 @@
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsEmpty, IsString, MinLength } from 'class-validator';
 
 export class LoginAuthDto {
   @IsEmail()
   email: string;
 
   @IsString()
-  @IsStrongPassword({
-    minLength: 4,
-  })
+  @MinLength(4)
   password: string;
+
+  @IsEmpty()
+  username: string;
 }
