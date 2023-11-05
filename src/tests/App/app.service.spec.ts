@@ -6,7 +6,7 @@ import { TypeORMPostgresqlTestingModule } from '../../config/tests';
 import { Language } from '../../models/Language';
 import { INestApplication } from '@nestjs/common';
 import { AppController } from '../../modules/App/app.controller';
-import { AppModule } from '../../app';
+import { AppModule } from '../../app.module';
 import { Repository } from 'typeorm';
 
 describe('AppService', () => {

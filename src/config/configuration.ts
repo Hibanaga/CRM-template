@@ -25,6 +25,14 @@ class EnviromentVariables {
   @IsNotEmpty()
   @IsString()
   PGADMIN_DEFAULT_PASSWORD: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_ACCESS_TOKEN_SECRET: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_ACCESS_TOKEN_EXPIRATION: string;
 }
 
 export function validate(config: Record<string, any>) {

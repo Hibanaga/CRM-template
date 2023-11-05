@@ -4,34 +4,13 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../models/User';
 import CryptoService from './services/crypto.service';
-import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './authentication/strategy/local-strategy';
 import { JwtStrategy } from './authentication/strategy/jwt-strategy';
-import { PassportModule } from '@nestjs/passport';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JWTConfiguration } from '../../config/authorization';
 
 @Module({
   providers: [AuthService, CryptoService, LocalStrategy, JwtStrategy],
-  imports: [
-    PassportModule,
-    TypeOrmModule.forFeature([User]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_ACCESS_TOKEN_EXPIRATION'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([User]), JWTConfiguration],
   controllers: [AuthController],
 })
 export class AuthModule {}
-
-// {
-//   secret:
-//       '487109cf168d507226080741a26b209be5cdc120310f13a9637c09a39f5c81fe',
-//           signOptions: { expiresIn: '1h' },
-// }
