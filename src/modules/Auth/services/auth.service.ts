@@ -58,22 +58,29 @@ export class AuthService {
       };
 
       return {
-        ...body,
         accessToken: this.jwtService.sign(payload),
-        refreshToken: this.jwtService.sign(payload, {
-          expiresIn: this.configService.get<string>(
-            'JWT_REFRESH_TOKEN_EXPIRATION',
-          ),
-        }),
       };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async single(id: string): Promise<User> {
+  async profile(email: string): Promise<User> {
     try {
-      return await this.userRepository.findOne({ where: { id } });
+      const user = await this.userRepository.findOne({
+        where: { email },
+        select: ['id', 'email', 'username'],
+      });
+
+      return user;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async single(name: string, value: string): Promise<User> {
+    try {
+      return await this.userRepository.findOne({ where: { [name]: value } });
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
@@ -81,8 +88,8 @@ export class AuthService {
 
   async remove(id: string): Promise<User> {
     try {
-      const userToDelete = await this.single(id);
-      return await this.userRepository.remove(userToDelete);
+      const userToDelete = await this.single('id', id);
+      return this.userRepository.remove(userToDelete);
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.NOT_FOUND);
     }
@@ -100,15 +107,5 @@ export class AuthService {
     }
 
     return null;
-  }
-
-  async refreshToken(user: User) {
-    const payload = {
-      email: user.email,
-    };
-
-    return {
-      accessToken: this.jwtService.sign(payload),
-    };
   }
 }

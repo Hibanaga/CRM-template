@@ -5,13 +5,14 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
+  Get,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { LocalAuthGuard } from './authentication/guard/local-auth-guard';
-import { RefreshJwtGuard } from './authentication/guard/refresh-jwt-auth.guard';
+import { JwtAuthGuard } from './authentication/guard/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,12 +29,13 @@ export class AuthController {
     return this.authService.login(body);
   }
 
-  @UseGuards(RefreshJwtGuard)
-  @Post('refresh')
-  async refreshToken(@Request() req) {
-    return this.authService.refreshToken(req.user);
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  profile(@Req() req) {
+    return this.authService.profile(req.user?.email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.authService.remove(id);
