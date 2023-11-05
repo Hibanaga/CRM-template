@@ -17,7 +17,7 @@ import { RefreshJwtGuard } from './authentication/guard/refresh-jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/register')
+  @Post('register')
   register(@Body() body: RegisterAuthDto) {
     return this.authService.register(body);
   }

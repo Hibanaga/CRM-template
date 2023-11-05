@@ -9,11 +9,15 @@ export class RefreshJwtStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromBodyField('refresh'),
       ignoreExpiration: false,
-      secretOrKey: `${process.env.jwt_secret}`,
+      secretOrKey:
+        '487109cf168d507226080741a26b209be5cdc120310f13a9637c09a39f5c81fe',
     });
   }
 
   async validate(payload: any) {
-    return { user: payload.sub, username: payload.username };
+    console.log(
+      `[RefreshToken Strategy] validate: payload=${JSON.stringify(payload)}`,
+    );
+    return { userId: payload.sub, email: payload.email };
   }
 }

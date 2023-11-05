@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotAcceptableException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RegisterAuthDto } from '../dto/register-auth.dto';
 import { LoginAuthDto } from '../dto/login-auth.dto';
 import { User } from '../../../models/User';

@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './authentication/strategy/local-strategy';
 import { JwtStrategy } from './authentication/strategy/jwt-strategy';
 import { RefreshJwtStrategy } from './authentication/strategy/refresh-token.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { RefreshJwtStrategy } from './authentication/strategy/refresh-token.stra
     RefreshJwtStrategy,
   ],
   imports: [
+    PassportModule,
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret:
