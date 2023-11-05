@@ -39,10 +39,14 @@ export class AuthService {
           ...body,
           password: hashedPassword,
         })
-        .returning(['id', 'email', 'password'])
+        .returning(['id', 'email'])
         .execute();
 
-      return newUser.raw;
+      const payload = { email: body.email, sub: { username: body.username } };
+      return {
+        ...newUser.raw[0],
+        accessToken: this.jwtService.sign(payload),
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -50,13 +54,7 @@ export class AuthService {
 
   async login(body: LoginAuthDto): Promise<any> {
     try {
-      const payload = {
-        email: body.email,
-        sub: {
-          username: body.username,
-        },
-      };
-
+      const payload = { email: body.email, sub: { username: body.username } };
       return {
         accessToken: this.jwtService.sign(payload),
       };
