@@ -6,6 +6,7 @@ import { validate } from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormCliConfig from '../typeorm-cli.config';
 import { Language } from './models/Language';
+import { AuthModule } from './modules/Auth/auth.module';
 
 @Module({
   imports: [
@@ -20,8 +21,9 @@ import { Language } from './models/Language';
       useFactory: () => typeormCliConfig.options,
     }),
     TypeOrmModule.forFeature([Language]),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class App {}
+export class AppModule {}
