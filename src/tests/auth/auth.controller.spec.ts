@@ -81,8 +81,4 @@ describe('AuthController', () => {
 
     expect(!!res?.accessToken).toBeTruthy();
   });
-
-  it('should be called delete method', async () => {
-    const user = await controller.register(newUser);
-  });
 });
